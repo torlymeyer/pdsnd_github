@@ -22,7 +22,29 @@ def is_valid(input_option: str, valid_options: list, allow_all: bool = True):
         bool: Whether input is valid
     """
     return (input_option.lower() in valid_options) or (allow_all and input_option == 'All')
-    
+
+def user_input(prompt: str, valid_options: list, allow_all: bool = False) -> str:
+    """Loops to check if user response is valid
+
+    Args:
+        prompt (str): User entered string
+        valid_options (list): Either cities, motnhs, or days
+        allow_all (bool, optional): Allow user to input 'all' to reference elements of invalid options. Defaults to False.
+
+    Returns:
+        str: Whether input is valid
+    """
+    invalid_input = True
+    while invalid_input:
+        response = input(prompt).title()    
+        if is_valid(input_option=response, valid_options=valid_options, allow_all=allow_all):
+            invalid_input = False
+        else:
+            print(f'{response} is not a valid option. Please try again.')
+    print(f'{response} is a valid option. enjoy your data')
+    return response
+
+
 
 def get_filters():
     """
@@ -33,43 +55,25 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
-    print('Hello! Let\'s explore some US bikeshare data!')
+    print('Hello! Let\'s explore some US bikeshare data!')    
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    invalid_city_input = True
-    while invalid_city_input:
-        city = input('Enter a city (Chicago, New York City, Washington) to view data:').title()
-        
-        if is_valid(city, CITIES, allow_all=False):
-            invalid_city_input = False
-        else:
-            print(f'{city} is not a valid option. Please try again.')
-    
+    city = user_input(
+        prompt='Enter a city (Chicago, New York City, Washington) to view data:',
+        valid_options=CITIES,
+        allow_all=False
+    )
     # get user input for month (all, january, february, ... , june)
-    invalid_month_input = True
-    while invalid_month_input:
-        month = input(f'Enter a month to view data for {city}. (to view all, type ''all''):').title()
-
-        if is_valid(month, MONTHS):
-            invalid_month_input = False
-            
-        else:
-            print(f'{month} is not a valid option. Please try again.')
-    print(f'{month} is a valid option. enjoy your data')
-    
+    month = user_input(
+        prompt=f'Enter a month to view data for {city}. (to view all, type ''all''):',
+        valid_options=MONTHS,
+        allow_all=True
+    )
     # get user input for day of week (all, monday, tuesday, ... sunday)
-#     query_day = []
-    invalid_day_input = True
-    while invalid_day_input:
-        day = input(f'Enter a day of the week to view data for {month} in {city}:').title()
-        
-        print(day)
-        if is_valid(day, DAYS):
-            invalid_day_input = False
-        else:
-            print(f'{day} is not an option. Please try again.')
-    print(f'{day} is a valid option. ENJOY!')
-
-
+    day = user_input(
+        prompt=f'Enter a day of the week to view data for {month} in {city}:',
+        valid_options=DAYS,
+        allow_all=True
+    )
     print('-'*40)
     return city, month, day
 
