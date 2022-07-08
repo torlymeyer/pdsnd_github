@@ -6,11 +6,21 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 CITIES = ['chicago', 'new york city', 'washington']
-MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october',                        'november', 'december']
+MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 
 def is_valid(input_option: str, valid_options: list, allow_all: bool = True):
+    """ Determines if input is in a list of valid options.
+
+    Args:
+        input_option (str): User entered string
+        valid_options (list): Either cities, months, or days
+        allow_all (bool, optional): Allow user to input 'all' to reference all elements of valid options. Defaults to True.
+
+    Returns:
+        bool: Whether input is valid
+    """
     return (input_option.lower() in valid_options) or (allow_all and input_option == 'All')
     
 
