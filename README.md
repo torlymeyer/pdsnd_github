@@ -7,7 +7,7 @@
 BikeShare Analysis CLI
 
 ### Description
-Easily access desired information on chicago, new york city, and washington bikeshare data.
+This project includes the data of bicycle sharing systems in major cities. With this interface, you can easily access desired bikeshare data in Chicago, New York City, and Washington bikeshare data.
 
 ### Files used
 bikeshare.py
