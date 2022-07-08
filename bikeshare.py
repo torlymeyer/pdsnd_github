@@ -6,13 +6,45 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 CITIES = ['chicago', 'new york city', 'washington']
-MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october',                        'november', 'december']
+MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 
 def is_valid(input_option: str, valid_options: list, allow_all: bool = True):
+    """ Determines if input is in a list of valid options.
+
+    Args:
+        input_option (str): User entered string
+        valid_options (list): Either cities, months, or days
+        allow_all (bool, optional): Allow user to input 'all' to reference all elements of valid options. Defaults to True.
+
+    Returns:
+        bool: Whether input is valid
+    """
     return (input_option.lower() in valid_options) or (allow_all and input_option == 'All')
-    
+
+def user_input(prompt: str, valid_options: list, allow_all: bool = False) -> str:
+    """Loops to check if user response is valid
+
+    Args:
+        prompt (str): User entered string
+        valid_options (list): Either cities, motnhs, or days
+        allow_all (bool, optional): Allow user to input 'all' to reference elements of invalid options. Defaults to False.
+
+    Returns:
+        str: Whether input is valid
+    """
+    invalid_input = True
+    while invalid_input:
+        response = input(prompt).title()    
+        if is_valid(input_option=response, valid_options=valid_options, allow_all=allow_all):
+            invalid_input = False
+        else:
+            print(f'{response} is not a valid option. Please try again.')
+    print(f'{response} is a valid option. enjoy your data')
+    return response
+
+
 
 def get_filters():
     """
@@ -23,43 +55,25 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
-    print('Hello! Let\'s explore some US bikeshare data!')
+    print('Hello! Let\'s explore some US bikeshare data!')    
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    invalid_city_input = True
-    while invalid_city_input:
-        city = input('Enter a city (Chicago, New York City, Washington) to view data:').title()
-        
-        if is_valid(city, CITIES, allow_all=False):
-            invalid_city_input = False
-        else:
-            print(f'{city} is not a valid option. Please try again.')
-    
+    city = user_input(
+        prompt='Enter a city (Chicago, New York City, Washington) to view data:',
+        valid_options=CITIES,
+        allow_all=False
+    )
     # get user input for month (all, january, february, ... , june)
-    invalid_month_input = True
-    while invalid_month_input:
-        month = input(f'Enter a month to view data for {city}. (to view all, type ''all''):').title()
-
-        if is_valid(month, MONTHS):
-            invalid_month_input = False
-            
-        else:
-            print(f'{month} is not a valid option. Please try again.')
-    print(f'{month} is a valid option. enjoy your data')
-    
+    month = user_input(
+        prompt=f'Enter a month to view data for {city}. (to view all, type ''all''):',
+        valid_options=MONTHS,
+        allow_all=True
+    )
     # get user input for day of week (all, monday, tuesday, ... sunday)
-#     query_day = []
-    invalid_day_input = True
-    while invalid_day_input:
-        day = input(f'Enter a day of the week to view data for {month} in {city}:').title()
-        
-        print(day)
-        if is_valid(day, DAYS):
-            invalid_day_input = False
-        else:
-            print(f'{day} is not an option. Please try again.')
-    print(f'{day} is a valid option. ENJOY!')
-
-
+    day = user_input(
+        prompt=f'Enter a day of the week to view data for {month} in {city}:',
+        valid_options=DAYS,
+        allow_all=True
+    )
     print('-'*40)
     return city, month, day
 
@@ -80,11 +94,11 @@ def load_data(city, month, day):
 
     # converted the Start Time column to datetime
     df['Start Time'] = pd.to_datetime(df['Start Time'])
-
+    start_time = df['Start Time'].dt
     # extracted month and day of week from Start Time to create new columns
-    df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.weekday_name
-    df['hour'] = df['Start Time'].dt.hour
+    df['month'] = start_time.month
+    df['day_of_week'] = start_time.weekday_name
+    df['hour'] = start_time.hour
     # filter by month if applicable
     if month != 'All':
         # use the index of the months list to get the corresponding int
